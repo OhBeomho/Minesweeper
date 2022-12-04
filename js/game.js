@@ -96,18 +96,14 @@ function game_over(td) {
 }
 
 function check_table() {
-	const checks = table_array.flat().filter((e) => e.classList.contains("check"))
-	if (checks.length === bombs.length) return checks.every((e, i) => e === bombs[i])
+	const not_opened = table_array.flat().filter((e) => e.classList.contains("closed"))
+	if (not_opened.length === bombs.length) return not_opened.every((e) => bombs.includes(e))
 	else return false
 }
 
 function open(x, y) {
 	if (bombs.includes(table_array[y][x])) {
 		game_over(table_array[y][x])
-		return
-	} else if (check_table()) {
-		document.querySelector("#bombs").innerText = "YOU WIN!"
-		running = false
 		return
 	}
 
@@ -130,6 +126,11 @@ function open(x, y) {
 	table_array[y][x].className = ""
 	table_array[y][x].style.color = color
 	if (bomb_count > 0) table_array[y][x].innerText = bomb_count
+
+	if (check_table()) {
+		document.querySelector("#bombs").innerText = "YOU WIN!"
+		running = false
+	}
 }
 
 window.addEventListener("DOMContentLoaded", start_game)
